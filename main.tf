@@ -1,12 +1,3 @@
-terraform {
-  backend "remote" {
-    organization = "chambras"
-
-    workspaces {
-      name = "work"
-    }
-  }
-}
 
 provider "azurerm" {
   version = "=1.23.0"
