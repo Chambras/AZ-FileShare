@@ -1,38 +1,47 @@
+terraform {
+  backend "remote" {
+    organization = "zambrana"
+
+    workspaces {
+      name = "usri-FileShare"
+    }
+  }
+  required_version = ">= 0.12.16"
+}
 
 provider "azurerm" {
-  version = "=1.23.0"
+  version = "=1.37.0"
 }
 
 resource "azurerm_resource_group" "genericRG" {
-  name = "${var.rgName}"
-  location = "${var.location}"
-  tags = "${var.tags}"
+  name     = var.rgName
+  location = var.location
+  tags     = var.tags
 }
 
 resource "azurerm_storage_account" "genericSA" {
-  name                     = "${var.saName}"
-  resource_group_name      = "${azurerm_resource_group.genericRG.name}"
-  location                 = "${azurerm_resource_group.genericRG.location}"
-  account_kind             = "${var.saKind}"
-  account_tier             = "${var.saTier}"
-  account_replication_type = "${var.saReplicationType}"
+  name                     = var.saName
+  resource_group_name      = azurerm_resource_group.genericRG.name
+  location                 = azurerm_resource_group.genericRG.location
+  account_kind             = var.saKind
+  account_tier             = var.saTier
+  account_replication_type = var.saReplicationType
 
-  tags = "${var.tags}"
+  tags = var.tags
 }
 
 resource "azurerm_storage_share" "genericFileShare" {
-  name = "${var.fsName}"
-  resource_group_name  = "${azurerm_resource_group.genericRG.name}"
-  storage_account_name = "${azurerm_storage_account.genericSA.name}"
+  name                 = var.fsName
+  storage_account_name = azurerm_storage_account.genericSA.name
 
-  quota = "${var.fsQuota}"
+  quota = var.fsQuota
 }
 
 resource "azurerm_recovery_services_vault" "genericVault" {
-  name                = "${var.rsvName}"
-  location            = "${azurerm_resource_group.genericRG.location}"
-  resource_group_name = "${azurerm_resource_group.genericRG.name}"
-  sku                 = "${var.rsvSKU}"
+  name                = var.rsvName
+  location            = azurerm_resource_group.genericRG.location
+  resource_group_name = azurerm_resource_group.genericRG.name
+  sku                 = var.rsvSKU
 
-  tags = "${var.tags}"
+  tags = var.tags
 }

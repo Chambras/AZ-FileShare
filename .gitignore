@@ -7,3 +7,10 @@
 
 # .tfvars files
 *.tfvars
+
+# plans
+*plan*
+*.plan*
+
+# logs
+crash.log
